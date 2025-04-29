@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<api-gateway:autodiscovery apiId="${api-instance-id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="423c8cb1-c0af-4042-8088-022010efae0e" flowRef="uhub-sapi-main" />
+	<global-property doc:name="Global Property" doc:id="1ed3f85a-d10f-40b8-8eb8-f8b5d10acd73" name="env" value="dev" />
+	<configuration-properties doc:name="Configuration properties" doc:id="ffa72839-0e16-44d5-9f8c-9f7c06764b93" file="config-${env}-props.yaml" />
+</mule>
