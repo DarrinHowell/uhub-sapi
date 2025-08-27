@@ -1,8 +1,8 @@
 api-instance-id: "20304248"
 
 database:
-  host: ""
+  host: "![n0USreGmilq53b9ePwCFeJpWeiCaK01eFtqWnDJ3aNVPt96SA4qg0iYKc92BSsl9]"
   port: "10003"
-  username: ""
-  password: ""
+  username: "![FPP3UhLGNDsmVHJUWnUrhA==]"
+  password: "![M4AZWStT7vPuvvn3UiDl9g==]"
   schema: "XE"
