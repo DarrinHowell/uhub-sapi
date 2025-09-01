@@ -225,15 +225,6 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\cases:application\json:uhub-sapi-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  error: "Not Found"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="Call POST COVID Cases Implementation" name="post-covid-cases-impl"/>
     </flow>
 </mule>
