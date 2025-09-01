@@ -43,7 +43,7 @@ output application/java
 		
 		<!-- Insert COVID case into database -->
 		<db:insert doc:name="Insert COVID Case" doc:id="insert-covid-case" config-ref="Database_Config">
-			<db:sql><![CDATA[INSERT INTO COVID_CASES (
+			<db:sql><![CDATA[INSERT INTO CVD_CASE_MASTER (
 				SOURCE, CASE_TYPE, FIRST_NAME, LAST_NAME, PHONE, EMAIL, 
 				DATE_OF_BIRTH, NATIONAL_ID, NATIONAL_ID_TYPE, 
 				STREET_ADDRESS, CITY, STATE, POSTAL, COUNTRY, 
@@ -60,7 +60,7 @@ output application/java
 		
 		<!-- Get the generated case ID -->
 		<db:select doc:name="Get Generated Case ID" doc:id="get-generated-case-id" config-ref="Database_Config">
-			<db:sql><![CDATA[SELECT COVID_CASES_SEQ.CURRVAL as CASE_ID FROM DUAL]]></db:sql>
+			<db:sql><![CDATA[SELECT CASE_SEQ.CURRVAL as CASE_ID FROM DUAL]]></db:sql>
 		</db:select>
 		
 		<!-- Transform response to return caseID -->
