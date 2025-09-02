@@ -225,6 +225,6 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\cases:application\json:uhub-sapi-config">
-		<flow-ref doc:name="post-covid-casers-impl" doc:id="cbf2c280-4f59-439a-8a97-b2b139249f55" name="post-covid-cases-impl"/>
+        <flow-ref doc:name="post-covid-casers-impl" doc:id="cbf2c280-4f59-439a-8a97-b2b139249f55" name="post-covid-cases-impl" />
     </flow>
 </mule>

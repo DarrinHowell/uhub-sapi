@@ -41,8 +41,8 @@ output application/java
 			</ee:message>
 		</ee:transform>
 		
-		<!-- Insert COVID case into database -->
-		<db:insert doc:name="Insert COVID Case" doc:id="insert-covid-case" config-ref="Database_Config">
+
+		<db:insert doc:name="Insert COVID Case" doc:id="f9e796f7-8dfd-437d-bdf8-31ee6819655d" config-ref="Database_Config">
 			<db:sql><![CDATA[INSERT INTO CVD_CASE_MASTER (
 				SOURCE, CASE_TYPE, FIRST_NAME, LAST_NAME, PHONE, EMAIL, 
 				DATE_OF_BIRTH, NATIONAL_ID, NATIONAL_ID_TYPE, 
@@ -58,19 +58,20 @@ output application/java
 			<db:input-parameters><![CDATA[#[payload]]]></db:input-parameters>
 		</db:insert>
 		
-		<!-- Get the generated case ID -->
-		<db:select doc:name="Get Generated Case ID" doc:id="get-generated-case-id" config-ref="Database_Config">
+		
+		<db:select doc:name="Get Generated Case ID" doc:id="0cd792c0-cde2-4c68-9335-2fa58c50b467" config-ref="Database_Config">
 			<db:sql><![CDATA[SELECT CASE_SEQ.CURRVAL as CASE_ID FROM DUAL]]></db:sql>
 		</db:select>
 		
-		<!-- Transform response to return caseID -->
-		<ee:transform doc:name="Build Success Response" doc:id="build-success-response">
+		
+		<!-- Mock response for testing -->
+		<ee:transform doc:name="Build Success Response (Mock)" doc:id="build-success-response">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
-	caseID: payload[0].CASE_ID as String
+	caseID: "MOCK-" ++ (randomInt(100000) as String)
 }]]></ee:set-payload>
 			</ee:message>
 			<ee:variables>
