@@ -1,0 +1,89 @@
+#%RAML 1.0
+title: uhub-sapi
+baseUri: https://uho-dev-uhub-sapi/covid/v1/
+
+traits:
+  client-id-required:
+    headers:
+      client_id:
+        type: string
+        description: client Id provided by API Manager
+        required: true
+      client_secret:
+        type: string
+        required: true
+        description: The Client secret key provided by the API Manager
+    responses:
+      401:
+        description: Unauthorized or invalid client application credentials
+      500:
+        description: Bad response from authorization server, or WSDL SOAP Fault error
+
+uses: 
+  covid-dashboard-lib: /covid-dashboard-lib.raml
+
+types: 
+  case: covid-dashboard-lib.registered-covid-case-data-type
+  case-request: covid-dashboard-lib.registered-covid-case-request-data-type
+  report: covid-dashboard-lib.get-reports-response-type
+  caseIDResponse: covid-dashboard-lib.create-and-update-response-data-type
+
+/cases:
+  /{nationalID}:
+    get:
+      is: 
+        - covid-dashboard-lib.common-headers
+        - covid-dashboard-lib.common-error-responses
+        - client-id-required
+      description: retrieve covid cases by ssn from uhub database
+      responses:
+          200:
+              body:
+                  application/json:
+                      type: case[]
+                      example: !include examples/cases-res-example.json
+  post:
+      is: 
+        - covid-dashboard-lib.common-headers
+        - covid-dashboard-lib.common-error-responses
+        - client-id-required
+      description: creates new registered covid case in uhub database
+      body:
+          application/json:
+              type: case-request
+              example: !include examples/case-req-body.json
+      responses:
+          200:
+              body:
+                  application/json:
+                      type: caseIDResponse
+  put:
+      is: 
+        - covid-dashboard-lib.common-headers
+        - covid-dashboard-lib.common-error-responses
+        - client-id-required
+      description: updates registered covid case in uhub database
+      body:
+          application/json:
+              type: case
+              example: !include examples/case-req-body.json
+      responses:
+          200:
+              body:
+                  application/json:
+                      type: caseIDResponse
+
+/reports:
+  get:
+      is: 
+        - covid-dashboard-lib.common-headers
+        - covid-dashboard-lib.common-error-responses
+        - client-id-required 
+        - covid-dashboard-lib.common-queryParameters
+      description: returns a report of all covid cases and vaccinations by state. if no state is provided in the 'state' query param, a report of all states is returned.
+      responses:
+          200:
+              body:
+                  application/json:
+                      type: report[]
+                      example: !include examples/reports-res-example.json

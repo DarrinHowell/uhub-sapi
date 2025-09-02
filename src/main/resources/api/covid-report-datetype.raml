@@ -1,0 +1,37 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  state: 
+      type: string
+      description: state corresponding to report data
+      required: true
+      example: "Texas"
+  report:
+    type: object
+    properties: 
+        total: 
+            type: string
+            description: total number of covid cases registered for the state
+            required: true
+            example: "46744"
+        positive:
+            type: string
+            description: number of positive covid cases registered for the state
+            required: true
+            example: "436744"
+        recovered:
+            type: string
+            description: number of recovered covid cases registered for the state
+            required: true
+            example: "433744"
+        death:
+            type: string
+            description: number of individuals who died from covid in the state
+            required: true
+            example: "300"
+        vaccinated:
+            type: string
+            description: number of individuals who received covid vaccine in the state
+            required: true
+            example: "878484"
