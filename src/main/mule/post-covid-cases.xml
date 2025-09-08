@@ -27,7 +27,6 @@ output application/java
 	lastName: payload.lastName,
 	phone: payload.phone,
 	email: payload.email,
-	dateOfBirth: payload.dateOfBirth,
 	nationalID: payload.nationalID,
 	nationalIDType: payload.nationalIDType,
 	streetAddress: payload.address.streetAddress,
@@ -36,46 +35,41 @@ output application/java
 	postal: payload.address.postal,
 	country: payload.address.country,
 	createDate: now() as String {format: "yyyy-MM-dd HH:mm:ss"},
-	updateDate: now() as String {format: "yyyy-MM-dd HH:mm:ss"}
+	updateDate: now() as String {format: "yyyy-MM-dd HH:mm:ss"},
+	dateOfBirth: payload.dateOfBirth ++ " 00:00:00"
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+	
 		
-
-		<db:insert doc:name="Insert COVID Case" doc:id="f9e796f7-8dfd-437d-bdf8-31ee6819655d" config-ref="Database_Config">
-			<db:sql><![CDATA[INSERT INTO CVD_CASE_MASTER (
-				SOURCE, CASE_TYPE, FIRST_NAME, LAST_NAME, PHONE, EMAIL, 
-				DATE_OF_BIRTH, NATIONAL_ID, NATIONAL_ID_TYPE, 
-				STREET_ADDRESS, CITY, STATE, POSTAL, COUNTRY, 
-				CREATE_DATE, UPDATE_DATE
-			) VALUES (
-				:source, :caseType, :firstName, :lastName, :phone, :email,
-				TO_DATE(:dateOfBirth, 'YYYY-MM-DD'), :nationalID, :nationalIDType,
-				:streetAddress, :city, :state, :postal, :country,
-				TO_DATE(:createDate, 'YYYY-MM-DD HH24:MI:SS'), 
-				TO_DATE(:updateDate, 'YYYY-MM-DD HH24:MI:SS')
-			)]]></db:sql>
-			<db:input-parameters><![CDATA[#[payload]]]></db:input-parameters>
-		</db:insert>
-		
-		
-		<db:select doc:name="Get Generated Case ID" doc:id="0cd792c0-cde2-4c68-9335-2fa58c50b467" config-ref="Database_Config">
-			<db:sql><![CDATA[SELECT CASE_SEQ.CURRVAL as CASE_ID FROM DUAL]]></db:sql>
-		</db:select>
+		  <db:stored-procedure doc:name="Insert COVID Case" config-ref="Database_Config" target="newCaseId">
+      <db:sql><![CDATA[CALL INSERT_COVID_CASE(
+          :source, :caseType, :firstName, :lastName, :phone, :email,
+          :dateOfBirth, :nationalID, :nationalIDType,
+          :streetAddress, :city, :state, :postal, :country,
+          :createDate, :updateDate, :caseId
+      )]]></db:sql>
+      <db:input-parameters><![CDATA[#[payload]]]></db:input-parameters>
+      <db:output-parameters>
+          <db:output-parameter key="caseId" type="INTEGER"/>
+      </db:output-parameters>
+  </db:stored-procedure>
+  
+    <logger level="INFO" message="Generated keys: #[vars.newCaseId]"/>
 		
 		
 		<!-- Mock response for testing -->
-		<ee:transform doc:name="Build Success Response (Mock)" doc:id="build-success-response">
+		<ee:transform doc:name="Build Success Response" doc:id="build-success-response">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
-	caseID: "MOCK-" ++ (randomInt(100000) as String)
+	caseID: vars.newCaseId.caseId
 }]]></ee:set-payload>
 			</ee:message>
 			<ee:variables>
-				<ee:set-variable variableName="httpStatus">201</ee:set-variable>
+				<ee:set-variable variableName="httpStatus"><![CDATA[201]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		
