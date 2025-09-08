@@ -42,7 +42,7 @@ output application/java
 		</ee:transform>
 	
 		
-		  <db:stored-procedure doc:name="Insert COVID Case" config-ref="Database_Config" target="newCaseId">
+		  <db:stored-procedure doc:name="Insert COVID Case" config-ref="Database_Config">
       <db:sql><![CDATA[CALL INSERT_COVID_CASE(
           :source, :caseType, :firstName, :lastName, :phone, :email,
           :dateOfBirth, :nationalID, :nationalIDType,
@@ -54,8 +54,6 @@ output application/java
           <db:output-parameter key="caseId" type="INTEGER"/>
       </db:output-parameters>
   </db:stored-procedure>
-  
-    <logger level="INFO" message="Generated keys: #[vars.newCaseId]"/>
 		
 		
 		<!-- Mock response for testing -->
@@ -65,7 +63,7 @@ output application/java
 output application/json
 ---
 {
-	caseID: vars.newCaseId.caseId
+	caseID: payload.caseId
 }]]></ee:set-payload>
 			</ee:message>
 			<ee:variables>
