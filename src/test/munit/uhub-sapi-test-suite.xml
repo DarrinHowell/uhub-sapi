@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="uhub-sapi-test-suite.xml" />
+	<munit:test name="uhub-sapi-test-suite-post-covid-case-valid-insert-test" doc:id="323d8522-91c3-4d56-80ef-59305f957423" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\cases:application\json:uhub-sapi-config" doc:id="087d6199-dbd3-41ac-a9f1-4813fae94307" name="post:\cases:application\json:uhub-sapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="uhub-sapi-test-suite-post-covid-case-database-offline-test" doc:id="05453350-edfc-456d-b0b0-0583c0486bac" description="Test" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\cases:application\json:uhub-sapi-config" doc:id="c4e87581-c8fa-4a31-a696-b5937d189f7e" name="post:\cases:application\json:uhub-sapi-config" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="uhub-sapi-test-suite-post-covid-case-bad-request-test" doc:id="e21b338a-9e30-4366-af54-886f06d9aad7" description="Test" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\cases:application\json:uhub-sapi-config" doc:id="61d73e74-22d3-4dc1-a943-e8e43d2cfc52" name="post:\cases:application\json:uhub-sapi-config" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="uhub-sapi-test-suite-post-covid-case-internal-server-error-test" doc:id="704ae68a-5dea-43fc-8d53-5ed96ab9c746" description="Test" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\cases:application\json:uhub-sapi-config" doc:id="0288344f-1de8-46fc-abaa-a9387c8ed15f" name="post:\cases:application\json:uhub-sapi-config" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="uhub-sapi-test-suite-post-covid-case-api-kit-router-test" doc:id="65c5ec50-0e6e-43ea-a57a-32f07d690619" description="Test" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\cases:application\json:uhub-sapi-config" doc:id="bccc1e99-9018-451e-bccd-c270bba76705" name="uhub-sapi-main" />
+		</munit:execution>
+	</munit:test>
+
+</mule>
