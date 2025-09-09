@@ -1,0 +1,28 @@
+#%RAML 1.0 Trait
+
+usage: Standard error responses for failed API calls
+responses:
+  404:
+    description: Bad Request - Not Found
+    body:
+      application/json:
+        example: |
+          {
+            "error": "Not Found"
+          }
+  500:
+    description: Internal Server Error
+    body:
+      application/json:
+        example: |
+          {
+            "error": "An unexpected error occurred"
+          }
+  503:
+    description: The upstream service is temporarily not available
+    body:
+      application/json:
+        example: |
+          {
+            "error": "Service Unavailable"
+          }

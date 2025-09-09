@@ -1,0 +1,82 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  source:
+      type: string
+      description: source of covid case (medical facility)
+      required: true
+      example: "Hospital1"
+  caseID:
+      type: string
+      description: case number in uhub database
+      required: false
+      example: "456464"
+  caseType:
+      type: string
+      description: denotes whether case is positive, negative, or invalid
+      required: true
+      example: "positive"
+  firstName:
+      type: string
+      description: first name of patient
+      required: true
+      example: "John"
+  lastName:
+      type: string
+      description: last name of patient
+      required: true
+      example: "Nixon"
+  phone:
+      type: string
+      description: phone number of patient
+      required: true
+      example: "541-754-3010"
+  email:
+      type: string
+      description: email of patient
+      required: true
+      example: "john@gmail.com"
+  dateOfBirth:
+      type: string
+      description: birthdate of patient
+      required: true
+      example: "1989-04-26"
+  nationalID:
+      type: string
+      description: unique identifier of patient
+      required: true
+      example: "209-49-6193"
+  nationalIDType:
+      type: string
+      description: type of ID used for nationalID
+      required: true
+      example: "SSN"
+  address:
+      type: object
+      properties:
+          streetAddress:
+              type: string
+              description: street address
+              required: true
+              example: "1600 Pennsylvania Avenue NW"
+          city:
+              type: string
+              description: street address
+              required: true
+              example: "Boston"
+          state:
+              type: string
+              description: state of residence
+              required: true
+              example: "MA"
+          postal:
+              type: string
+              description: zip code
+              required: true
+              example: "20500"
+          country:
+              type: string
+              description: country of residence
+              required: true
+              example: "USA"

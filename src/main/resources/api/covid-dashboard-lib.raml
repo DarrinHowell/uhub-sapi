@@ -1,0 +1,13 @@
+#%RAML 1.0 Library
+usage: uhub sapi types
+
+types:
+  registered-covid-case-data-type: !include registered-covid-datatype.raml
+  registered-covid-case-request-data-type: !include registered-covid-request-datatype.raml
+  get-reports-response-type: !include covid-report-datetype.raml
+  create-and-update-response-data-type: !include caseid-response-datatype.raml
+
+traits: 
+  common-headers: !include common-headers.raml
+  common-queryParameters: !include query-params.raml
+  common-error-responses: !include common-error-responses.raml
