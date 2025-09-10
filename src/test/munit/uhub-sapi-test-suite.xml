@@ -17,7 +17,7 @@
 					<munit-tools:with-attribute whereValue="Insert COVID Case" attributeName="doc:name" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
-					<munit-tools:payload value='#[readUrl("classpath://post-covid-case-test-data/db-caseId-mock.dwl", "application/java")]' />
+					<munit-tools:payload value='#[readUrl("classpath://post-covid-case-test-data/db-caseId-mock.dwl", "application/dw")]' />
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -28,7 +28,7 @@
 			<flow-ref doc:name="Flow-ref to post-covid-cases-impl" name="post-covid-cases-impl"/>
 		</munit:execution>
 		<munit:validation>
-			<munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(201)]" doc:name="Assert 201 Created"/>
+			<munit-tools:assert-that expression="#[vars.httpStatus]" is="#[MunitTools::equalTo(201)]" doc:name="Assert 201 Created"/>
 			<munit-tools:assert-that expression="#[payload]" is="#[MunitTools::notNullValue()]" doc:name="Assert payload not null"/>
 		</munit:validation>
 	</munit:test>
