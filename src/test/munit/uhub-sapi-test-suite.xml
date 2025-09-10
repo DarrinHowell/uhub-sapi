@@ -32,11 +32,11 @@
 			<munit-tools:assert-that expression="#[payload]" is="#[MunitTools::notNullValue()]" doc:name="Assert payload not null"/>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="uhub-sapi-test-suite-post-covid-case-database-offline-test" doc:id="05453350-edfc-456d-b0b0-0583c0486bac" description="Test database connectivity failure" ignore="true">
+	<munit:test name="uhub-sapi-test-suite-post-covid-case-database-offline-test" doc:id="05453350-edfc-456d-b0b0-0583c0486bac" description="Test database connectivity failure" expectedErrorType="DB:CONNECTIVITY">
 		<munit:behavior>
-			<munit-tools:mock-when doc:name="Mock database error" processor="db:insert">
+			<munit-tools:mock-when doc:name="Mock database error" processor="db:stored-procedure">
 				<munit-tools:with-attributes>
-					<munit-tools:with-attribute attributeName="config-ref" whereValue="Database_Config"/>
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="Insert COVID Case"/>
 				</munit-tools:with-attributes>
 				<munit-tools:then-return>
 					<munit-tools:error typeId="DB:CONNECTIVITY"/>
@@ -50,8 +50,8 @@
 			<flow-ref doc:name="Flow-ref to post-covid-cases-impl" name="post-covid-cases-impl"/>
 		</munit:execution>
 		<munit:validation>
-			<munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(503)]" doc:name="Assert 503 Service Unavailable"/>
-			<munit-tools:assert-that expression="#[payload.message]" is="#[MunitTools::containsString('database')]" doc:name="Assert database error message"/>
+			<munit-tools:assert-that expression="#[vars.httpStatus]" is="#[MunitTools::equalTo(503)]" doc:name="Assert 503 Service Unavailable"/>
+			<munit-tools:assert-that expression="#[payload.message]" is="#[MunitTools::containsString('Database')]" doc:name="Assert database error message"/>
 		</munit:validation>
 	</munit:test>
 	<munit:test name="uhub-sapi-test-suite-post-covid-case-bad-request-test" doc:id="e21b338a-9e30-4366-af54-886f06d9aad7" description="Test invalid payload - missing required fields" ignore="true">
