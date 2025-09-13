@@ -1,0 +1,17 @@
+{
+    "source": "Hospital3",
+    "caseType": "positive",
+    "lastName": "Lynch",
+    "phone": "541-754-5561",
+    "email": "shawn@gmail.com",
+    "dateOfBirth": "1991-04-31",
+    "nationalID": "208-49-6202",
+    "nationalIDType": "SSN",
+    "address": {
+        "streetAddress": "18915 93th Place W",
+        "city": "Seattle",
+        "state": "WA",
+        "postal": "98118",
+        "country": "USA"
+    }
+}

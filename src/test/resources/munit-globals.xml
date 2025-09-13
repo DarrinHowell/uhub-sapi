@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<global-property doc:name="Global Property" doc:id="62a0c9bc-6ad7-4753-abd7-b3bc8ef56d45" name="env" value="dev" />
+	<configuration-properties doc:name="Configuration properties" doc:id="d513f469-69cf-40d9-8ac2-3755ce323d6d" file="config-munit-${env}-props.yaml" />
+	<secure-properties:config name="Secure_Properties_Config_MUnit" doc:name="Secure Properties Config" doc:id="cf9d9a47-9661-43d9-90a4-26d0dbba6cc8" file="config-munit-${env}-props.yaml" key="${secure.key}" />
+	<db:config name="Database_Config_MUnit" doc:name="Database Config" doc:id="b33c305a-ea60-462a-9ed4-95fe837cf2fb" >
+		<db:oracle-connection host="${secure::database.host}" port="${database.port}" user="${secure::database.username}" password="${secure::database.password}" serviceName="${database.schema}"/>
+	</db:config>
+</mule>
