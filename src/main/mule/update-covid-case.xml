@@ -1,5 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<!-- PUT COVID Cases Implementation Flow -->
+	<flow name="update-covid-cases-impl" doc:id="update-covid-cases-impl">
+		
+		<!-- Log incoming request -->
+		<logger level="INFO" doc:name="Log Request" doc:id="log-update-request" 
+			message="PUT /cases - Processing COVID case update for: #[payload.firstName] #[payload.lastName] with National ID: #[payload.nationalID]"/>
+		
+		<!-- Validate required fields and transform input -->
+		<ee:transform doc:name="Validate and Transform Input" doc:id="validate-transform-update-input">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	source: payload.source,
+	caseType: payload.caseType,
+	firstName: payload.firstName,
+	lastName: payload.lastName,
+	phone: payload.phone,
+	email: payload.email,
+	nationalID: payload.nationalID,
+	nationalIDType: payload.nationalIDType,
+	streetAddress: payload.address.streetAddress,
+	city: payload.address.city,
+	state: payload.address.state,
+	postal: payload.address.postal,
+	country: payload.address.country,
+	updateDate: now() as String {format: "yyyy-MM-dd HH:mm:ss"},
+	dateOfBirth: payload.dateOfBirth ++ " 00:00:00"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	
+		<!-- Call the UPDATE stored procedure -->
+		<db:stored-procedure doc:name="Update COVID Case" config-ref="Database_Config">
+			<db:sql><![CDATA[CALL UPDATE_COVID_CASE(
+				:source, :caseType, :firstName, :lastName, :phone, :email,
+				:dateOfBirth, :nationalID, :nationalIDType,
+				:streetAddress, :city, :state, :postal, :country,
+				:updateDate, :caseId
+			)]]></db:sql>
+			<db:input-parameters><![CDATA[#[payload]]]></db:input-parameters>
+			<db:output-parameters>
+				<db:output-parameter key="caseId" type="INTEGER"/>
+			</db:output-parameters>
+		</db:stored-procedure>
+		
+		<!-- Build success response -->
+		<ee:transform doc:name="Build Success Response" doc:id="build-update-success-response">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	caseID: payload.caseId as String
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="httpStatus"><![CDATA[200]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		
+		<!-- Log successful case update -->
+		<logger level="INFO" doc:name="Log Success" doc:id="log-update-success" 
+			message="COVID case updated successfully with ID: #[payload.caseID]"/>
+		
+		<!-- Error handling -->
+		<error-handler>
+			<on-error-propagate type="DB:CONNECTIVITY" doc:name="Database Connection Error">
+				<logger level="ERROR" doc:name="Log DB Connection Error" 
+					message="Database connectivity error: #[error.description]"/>
+				<ee:transform doc:name="DB Connection Error Response">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	error: "Database Connection Error",
+	message: "Unable to connect to database. Please try again later.",
+	timestamp: now(),
+	correlationId: correlationId
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">503</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			
+			<on-error-propagate type="DB:QUERY_EXECUTION" doc:name="Database Query Error">
+				<logger level="ERROR" doc:name="Log DB Query Error" 
+					message="Database query execution error: #[error.description]"/>
+				<ee:transform doc:name="DB Query Error Response">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	error: "Record Not Found",
+	message: "No COVID case found with the provided National ID. Please verify the National ID and try again.",
+	timestamp: now(),
+	correlationId: correlationId
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">404</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			
+			<on-error-propagate type="ANY" doc:name="General Error Handler">
+				<logger level="ERROR" doc:name="Log General Error" 
+					message="Unexpected error in PUT /cases: #[error.description]"/>
+				<ee:transform doc:name="General Error Response">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	error: "Internal Server Error",
+	message: "An unexpected error occurred. Please try again later.",
+	timestamp: now(),
+	correlationId: correlationId
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">500</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+
+</mule>
